@@ -18,7 +18,6 @@ from tkinter import ttk
 
 dataImc = []
 dataAge = []
-dataSex = []
 sobrepeso = []
 obeso = []
 jovenssobrepeso = []

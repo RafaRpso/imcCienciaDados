@@ -2,7 +2,6 @@ from math import * ;
 import random ; 
 
 file = open("logDados.csv", "a" )
-sexo = ['f','m']
 num = 0 ; 
 for i in range ( 0, 10000 ) : 
     
@@ -37,5 +36,5 @@ for i in range ( 0, 10000 ) :
         idade = random.randint(65,80)
     
     
-    file.write( str(idade)+";"+str( round(imc,2)) + ";" + str(sexo[randomGenero])+"\n")
+    file.write( str(idade)+";"+str( round(imc,2)) + "\n")
 file.close()

@@ -11,6 +11,7 @@
 <body>
     <py-env>
         - matplotlib
+        - pandas
     </py-env>
 </body>
 </html>
@@ -22,9 +23,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
+import pandas as pd 
+from pyodide.http import open_url
 import random ; 
-import csv 
 
+
+
+url_content = open_url('https://raw.githubusercontent.com/RafaRpso/imcCienciaDados/main/logDados.csv')
+df = pd.read_csv(url_content, sep=';')
+csv = Element('csv')
+print(df)
 
 
 dataImc = []
@@ -33,16 +41,11 @@ dataSex = []
 sobrepeso = []
 obeso = []
 jovenssobrepeso = []
-with open ('logDados.csv' ) as File : 
-    line_reader = csv.reader(File, delimiter=';')
-    
-    for i in line_reader : 
+
+for i in df :
         dataAge.append(int((i[0])))
         dataImc.append(float((i[1])))
-        dataSex.append((i[2]))
-
-    
-
+        
 for i in dataImc : 
     if (i > 25 and i <= 29) : 
         sobrepeso.append(i)
