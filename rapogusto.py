@@ -27,7 +27,6 @@ with open ('logDados.csv' ) as File :
     for i in line_reader : 
         dataAge.append(int((i[0])))
         dataImc.append(float((i[1])))
-        dataSex.append((i[2]))
 
     
 

@@ -7,17 +7,24 @@
     <title>Atividade Marise</title>
     <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
     <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
-</head>
-<body>
+
     <py-env>
         - matplotlib
         - pandas
     </py-env>
+
+    
+</head>
+<body>
+    <h1>Rafael e Guilherme _ Gráfico Web</h1>
+    <div id="lineplot"></div>
 </body>
 </html>
 
 
-<py-script>
+
+
+<py-script output="lineplot">
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -27,45 +34,37 @@ import pandas as pd
 from pyodide.http import open_url
 import random ; 
 
-
+columns = ['Idade', 'Imc']
 
 url_content = open_url('https://raw.githubusercontent.com/RafaRpso/imcCienciaDados/main/logDados.csv')
-df = pd.read_csv(url_content, sep=';')
+df = pd.read_csv(url_content, names=columns, sep=';' )
 csv = Element('csv')
-print(df)
 
 
-dataImc = []
-dataAge = []
-dataSex = []
+
+dataImc = df['Imc'].tolist()
+dataAge = df['Idade'].tolist()
 sobrepeso = []
 obeso = []
-jovenssobrepeso = []
 
-for i in df :
-        dataAge.append(int((i[0])))
-        dataImc.append(float((i[1])))
-        
 for i in dataImc : 
     if (i > 25 and i <= 29) : 
         sobrepeso.append(i)
     if (i >29 ) : 
         obeso.append(i)    
 
-print(len(sobrepeso))
-np.random.seed(19680801)
 
-def scattermap() : 
-    fig, ax = plt.subplots( )
+fig, ax = plt.subplots()
+labels = ["Sobrepeso", "Obeso","Peso Normal"]
+sobrepeso_percent = (len(sobrepeso)*100)/len(dataImc)
+obeso_percent = (len(obeso)*100)/len(dataImc)
+tamanhos = [sobrepeso_percent, obeso_percent ,  100-sobrepeso_percent]
+ax.pie(tamanhos, labels=labels, autopct='%1.1f%%',
+        shadow=True, startangle=90)
+ax.axis('equal') 
 
-    sizes = np.random.uniform(15, 80, len(dataImc))
-    colors = np.random.uniform(-20, 20, len(dataImc))
+fig
 
-    ax.scatter(dataImc, dataAge, s=sizes, c=colors, vmin=0, vmax=100)
 
-    ax.set_xlabel('Imc') 
-    ax.set_ylabel('Idade')
-    plt.show() ; 
 
-scattermap()
- </py-script>
+</py-script>
