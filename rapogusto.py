@@ -4,7 +4,8 @@ from matplotlib import cm
 from matplotlib.ticker import LinearLocator
 import random ; 
 import csv 
-
+from tkinter import *
+from tkinter import ttk
 
 
 # O que colocar : 
@@ -13,15 +14,14 @@ import csv
 # aperfeiçoar os graficos ja existentes
 # entrega até a terça 
 
+
+
 dataImc = []
 dataAge = []
 dataSex = []
-qtdIdososObesos = 0
-qtdCriancasObesas = 0 
-qtdObesos = 0 
-mediaImc = 0 ; 
-mediaIdade =0 ; 
-
+sobrepeso = []
+obeso = []
+jovenssobrepeso = []
 with open ('logDados.csv' ) as File : 
     line_reader = csv.reader(File, delimiter=';')
     
@@ -30,36 +30,22 @@ with open ('logDados.csv' ) as File :
         dataImc.append(float((i[1])))
         dataSex.append((i[2]))
 
-    for i in range(0,len(dataImc)) : 
-        if (float(dataImc[i]) >  30 ) : 
-            qtdObesos+=1 
-        if ( int(dataAge[i]) > 50 and float(dataImc[i]) > 30) : 
-            qtdIdososObesos+=1 
-        elif (int(dataAge[i]) < 14 and float(dataImc[i] > 30 )) : 
-            qtdCriancasObesas+=1  
+    
 
 for i in dataImc : 
-    mediaImc += i ; 
-mediaImc = mediaImc/len(dataImc) 
+    if (i > 25 and i <= 29) : 
+        sobrepeso.append(i)
+    if (i >29 ) : 
+        obeso.append(i)    
 
-for i in dataAge : 
-    mediaIdade += i ; 
-
-print(qtdObesos)
-print (qtdIdososObesos)
-print(qtdCriancasObesas)
-
-
-
-mediaImc = mediaImc/len(dataImc) 
-mediaIdade = mediaIdade/len(dataAge)
+print(len(sobrepeso))
 np.random.seed(19680801)
 
 def scattermap() : 
     fig, ax = plt.subplots( )
 
-    sizes = np.random.uniform(15, 8, len(dataImc))
-    colors = np.random.uniform(15, 80, len(dataImc))
+    sizes = np.random.uniform(15, 80, len(dataImc))
+    colors = np.random.uniform(-20, 20, len(dataImc))
 
     ax.scatter(dataImc, dataAge, s=sizes, c=colors, vmin=0, vmax=100)
 
@@ -77,11 +63,9 @@ def pixelmap() :
     ax.set_ylabel("Idade")
     plt.show()
 
-def barmap(x): 
+def barmap(): 
     fig, ax = plt.subplots()
-    ax.hist(x,bins=10, linewidth=0.5,width=15,edgecolor='black')
- 
-
+    ax.hist(dataImc,bins=10, linewidth=0.5,width=1,edgecolor='black')
     plt.show()
 
 
@@ -100,19 +84,44 @@ def map3d():
     R = np.sqrt(X**2 + Y**2)
     Z = np.sin(R)
 
-    # Plot the surface.
+
     surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
                         linewidth=0, antialiased=False)
-
-    # Customize the z axis.
-    ax.set_zlim(-1.01, 1.01)
+    ax.set_zlim(-2, 1)
     ax.zaxis.set_major_locator(LinearLocator(10))
     # A StrMethodFormatter is used automatically
-    ax.zaxis.set_major_formatter('{x:.02f}')
 
-    # Add a color bar which maps values to colors.
     fig.colorbar(surf, shrink=0.5, aspect=5)
 
     plt.show()
 
-barmap(dataAge,dataImc)
+def linearmap() : 
+    fig, ax = plt.subplots()
+    ax.plot(dataImc,dataAge)
+    plt.show()
+
+def piemap() : 
+    fig, ax = plt.subplots()
+    labels = ["Sobrepeso", "Obeso","Peso Normal"]
+    sobrepeso_percent = (len(sobrepeso)*100)/len(dataImc)
+    obeso_percent = (len(obeso)*100)/len(dataImc)
+    tamanhos = [sobrepeso_percent, obeso_percent ,  100-sobrepeso_percent]
+    ax.pie(tamanhos, labels=labels, autopct='%1.1f%%',
+            shadow=True, startangle=90)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.show()
+
+#tk para UI/UX 
+window = Tk()
+window.title("Gráficos")
+window.geometry('500x300')
+window.configure(background = "#7a9aeb")
+
+buttom = ttk.Button(window, text="Scatter ", command= scattermap).grid(row=1,column=0)
+buttom2 = ttk.Button(window, text="Pixel", command=pixelmap).grid(row=1,column=1)
+buttom3 = ttk.Button(window, text="Barra", command=barmap).grid(row=1,column=2)
+buttom4 = ttk.Button(window, text="PROIBIDO", command=linearmap).grid(row=2,column=0)
+buttom5 = ttk.Button(window, text="TRAVA 3080", command=map3d).grid(row=2,column=1)
+buttom6 = ttk.Button(window, text="Pizza", command=piemap).grid(row=1,column=3)
+window.mainloop()

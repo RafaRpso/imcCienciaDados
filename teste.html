@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade Marise</title>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+</head>
+<body>
+    <py-env>
+        - matplotlib
+    </py-env>
+</body>
+</html>
+
+
+<py-script>
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator
+import random ; 
+import csv 
+
+
+
+dataImc = []
+dataAge = []
+dataSex = []
+sobrepeso = []
+obeso = []
+jovenssobrepeso = []
+with open ('logDados.csv' ) as File : 
+    line_reader = csv.reader(File, delimiter=';')
+    
+    for i in line_reader : 
+        dataAge.append(int((i[0])))
+        dataImc.append(float((i[1])))
+        dataSex.append((i[2]))
+
+    
+
+for i in dataImc : 
+    if (i > 25 and i <= 29) : 
+        sobrepeso.append(i)
+    if (i >29 ) : 
+        obeso.append(i)    
+
+print(len(sobrepeso))
+np.random.seed(19680801)
+
+def scattermap() : 
+    fig, ax = plt.subplots( )
+
+    sizes = np.random.uniform(15, 80, len(dataImc))
+    colors = np.random.uniform(-20, 20, len(dataImc))
+
+    ax.scatter(dataImc, dataAge, s=sizes, c=colors, vmin=0, vmax=100)
+
+    ax.set_xlabel('Imc') 
+    ax.set_ylabel('Idade')
+    plt.show() ; 
+
+scattermap()
+ </py-script>
