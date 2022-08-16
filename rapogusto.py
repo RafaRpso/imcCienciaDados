@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
-import random ; 
-import csv 
+import random 
+import pandas as pd 
 from tkinter import *
 from tkinter import ttk
 
@@ -18,15 +18,20 @@ from tkinter import ttk
 
 dataImc = []
 dataAge = []
+dataSex = []
 sobrepeso = []
 obeso = []
 jovenssobrepeso = []
-with open ('logDados.csv' ) as File : 
-    line_reader = csv.reader(File, delimiter=';')
-    
-    for i in line_reader : 
-        dataAge.append(int((i[0])))
-        dataImc.append(float((i[1])))
+
+columns = ['Idade', 'Imc']
+
+
+df = pd.read_csv('./logDados.csv', names=columns, sep=';' )
+
+
+
+dataImc = df['Imc'].tolist()
+dataAge = df['Idade'].tolist()
 
     
 
